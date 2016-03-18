@@ -13,5 +13,10 @@ namespace AngularEvangelist.Controllers
         {
             return View();
         }
+
+        public ActionResult ForecastPanel()
+        {
+            return View();
+        }
     }
 }

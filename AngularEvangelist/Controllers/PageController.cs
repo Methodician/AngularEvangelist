@@ -18,5 +18,10 @@ namespace AngularEvangelist.Controllers
         {
             return View();
         }
+
+        public ActionResult WeatherSearch()
+        {
+            return View();
+        }
     }
 }

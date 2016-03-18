@@ -18,7 +18,15 @@
                     templateUrl: '/Page/Home',
                     controller: 'homeCtrl'
                 })
-                .when('/Weather', {
+                .when('/Search', {
+                    templateUrl: '/Page/WeatherSearch',
+                    controller: 'weatherSearchCtrl'
+                })
+                .when('/Forecast', {
+                    templateUrl: '/Page/Forecast',
+                    controller: 'forecastCtrl'
+                })
+                .when('/Forecast/:days', {
                     templateUrl: '/Page/Forecast',
                     controller: 'forecastCtrl'
                 });
@@ -60,46 +68,84 @@
 
         //  Directives
         myApp.directive('homeDirective', function() {
-            return {
-                templateUrl: '/Directive/HomeDirective',
-                replace: true // Makes sure the content replaces the parent div. Leave out to keep parent div.
-            }
-        });
+                return {
+                    templateUrl: '/Directive/HomeDirective',
+                    replace: true // Makes sure the content replaces the parent div. Leave out to keep parent div.
+                }
+            })
+            .directive('forecastPanel', function() {
+                return {
+                    templateUrl: '/Directive/ForecastPanel',
+                    replace: true,
+                    scope: {
+                        baseDate: '@@',
+                        dayTemp: '@@',
+                        nightTemp: '@@',
+                        convertDate: '&',
+                        convertTemp: '&'
+                    }
+                }
+            });
+
+
 
         //  Controllers
         myApp.controller('layoutCtrl', [
-            '$scope', function ($scope) {
-                $scope.layoutString = 'This is a string from layout\'s $scope';
-            }
-        ]);
-
-        myApp.controller('homeCtrl', [
-            '$scope', function($scope) {
-                $scope.homeString = 'This is a string from home\'s $scope';
-            }
-        ]);
-
-        myApp.controller('forecastCtrl', [
-            '$scope', '$routeParams', 'placeService', 'weatherService', function($scope, $routeParams, placeService, weatherService) {
-                $scope.city = placeService.city;
-                $scope.state = placeService.state;
-                $scope.location = placeService.cityState();
-
-                $scope.numDays = $routeParams.numDays || '5'; // The default just in case of a route with no params. It's a string because (something i remember about it not working, might update this note)
-
-                $scope.weatherResult = weatherService.GetWeather($scope.location, $scope.numDays);
-
-                $scope.convertToF = function(degKelvin) {
-                    return Math.round((1.8 * (degKelvin - 273)) + 32);
+                '$scope', function($scope) {
+                    $scope.layoutString = 'This is a string from layout\'s $scope';
                 }
-
-                $scope.convertToDate = function(dt) {
-                    // The date comes back in weird format... so we multiply times 1000
-                    return new Date(dt * 1000);
+            ])
+            .controller('homeCtrl', [
+                '$scope', function($scope) {
+                    $scope.homeString = 'This is a string from home\'s $scope';
                 }
-                // angularjs.org > develop > API (leads to https://docs.angularjs.org/api)
-            }
-        ]);
+            ])
+            .controller('weatherSearchCtrl', [
+                '$scope','$routeParams','$location','placeService',function($scope, $routeParams, $location, placeService) {
+                    $scope.city = placeService.city;
+                    $scope.state = placeService.state;
+                    $scope.numDays = 5;
+
+                    $scope.location = placeService.cityState();
+
+                    $scope.$watch('city', function () {
+                        placeService.city = $scope.city;
+                        $scope.location = placeService.cityState();
+                    });
+                    $scope.$watch('state', function () {
+                        placeService.state = $scope.state;
+                        $scope.location = placeService.cityState();
+                    });
+                    $scope.$watch('numDays', function () {
+                        $routeParams.days = $scope.numDays;
+                    });
+
+                    $scope.submit = function () {
+                        $location.path('/Forecast/' + $scope.numDays);
+                    }
+                }
+            ])
+            .controller('forecastCtrl', [
+                '$scope', '$routeParams', 'placeService', 'weatherService', function($scope, $routeParams, placeService, weatherService) {
+                    $scope.city = placeService.city;
+                    $scope.state = placeService.state;
+                    $scope.location = placeService.cityState();
+
+                    $scope.numDays = $routeParams.days || '5'; // The default just in case of a route with no params. It's a string because (something about the url routing pattern)
+
+                    $scope.weatherResult = weatherService.GetWeather($scope.location, $scope.numDays);
+
+                    $scope.convertToF = function(degKelvin) {
+                        return Math.round((1.8 * (degKelvin - 273)) + 32);
+                    }
+
+                    $scope.convertDate = function(dt) {
+                        // The date comes back in weird format... so we multiply times 1000
+                        return new Date(dt * 1000);
+                    }
+                    // angularjs.org > develop > API (leads to https://docs.angularjs.org/api)
+                }
+            ]);
 
         
     </script>
@@ -120,7 +166,7 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li><a href="#/Weather">Weather Forecast</a></li>
+                    <li><a href="/Weather#/Search">Weather Forecast</a></li>
                 </ul>
             </div>
         </div>

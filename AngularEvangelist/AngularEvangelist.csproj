@@ -123,6 +123,7 @@
     <Compile Include="Controllers\DirectiveController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PageController.cs" />
+    <Compile Include="Controllers\WeatherController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -174,6 +175,9 @@
     <Content Include="Views\Page\Home.cshtml" />
     <Content Include="Views\Directive\HomeDirective.cshtml" />
     <Content Include="Views\Page\Forecast.cshtml" />
+    <Content Include="Views\Directive\ForecastPanel.cshtml" />
+    <Content Include="Views\Page\WeatherSearch.cshtml" />
+    <None Include="Views\Weather\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

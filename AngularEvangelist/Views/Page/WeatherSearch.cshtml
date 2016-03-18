@@ -1,0 +1,23 @@
+﻿
+@{
+    Layout = null;
+}
+
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        @* Convenient way to center content. Column that takes up half the page, offset by 1/4 the page... *@
+        <h4>Forecast by City </h4>
+        <p>(notice dynamically updating button text - super easy w/Angular)</p>
+        <form ng-submit="submit()">
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="City" ng-model="city" />
+                <input type="text" class="form-control" placeholder="State" ng-model="state" />
+                <input type="number" class="form-control" placeholder="5" max="12" min="2" ng-model="numDays" />
+            </div>
+            <input type="submit" class="btn btn-primary" value="Get forecast" />  for the next {{numDays}} days in {{location}}
+            <br />
+            @* Another way to do it *@
+            <a href="#/Forecast/{{numDays}}" class="btn btn-primary">Get Forecast for the next {{numDays}} days in {{location}}</a> (...just illustrating another way... won't work with pressing enter)
+        </form>
+    </div>
+</div>

@@ -1,0 +1,14 @@
+﻿
+@{
+    Layout = null;
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ convertDate({ date: baseDate }) | date: 'MMM d, y' }} (converted from {{baseDate}})</h3>
+    </div>
+    <div class="panel-body">
+        Daytime High: {{ convertTemp({ temp: dayTemp }) }}F (converted from {{dayTemp}}K) <br />
+        Nighttime Low: {{ convertTemp({ temp: nightTemp }) }}F (converted from {{nightTemp}}K) <br />
+    </div>
+</div>
