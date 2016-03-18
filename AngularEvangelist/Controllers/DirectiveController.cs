@@ -6,15 +6,10 @@ using System.Web.Mvc;
 
 namespace AngularEvangelist.Controllers
 {
-    public class PageController : Controller
+    public class DirectiveController : Controller
     {
-        // GET: Page
-        public ActionResult Home()
-        {
-            return View();
-        }
-
-        public ActionResult Forecast()
+        // GET: Directive
+        public ActionResult HomeDirective()
         {
             return View();
         }

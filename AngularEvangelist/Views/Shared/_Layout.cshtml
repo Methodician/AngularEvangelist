@@ -6,9 +6,10 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     <script src="~/Scripts/angular.min.js" ></script>
     <script src="~/Scripts/angular-route.min.js"></script>
+    <script src="~/Scripts/angular-resource.min.js"></script>
     <script type="text/javascript" >
         //  App
-        var myApp = angular.module('myApp', ['ngRoute']);
+        var myApp = angular.module('myApp', ['ngRoute', 'ngResource']);
 
         //  Routes
         myApp.config(function($routeProvider) {
@@ -16,21 +17,91 @@
                 .when('/', {
                     templateUrl: '/Page/Home',
                     controller: 'homeCtrl'
+                })
+                .when('/Weather', {
+                    templateUrl: '/Page/Forecast',
+                    controller: 'forecastCtrl'
                 });
         });
 
+        //  Services
+        myApp.service('placeService', function() {
+            var self = this;
+            this.city = "Portland";
+            this.state = "OR";
+
+            this.cityState = function() {
+                return self.city + ", " + self.state;
+            }
+        });
+
+        myApp.service('weatherService', [
+            '$resource', function($resource) {
+                this.GetWeather = function(location, numDays) {
+                    var weatherApi = $resource('http://api.openweathermap.org/data/2.5/forecast/daily?APPID=1f1752b09314e40ba1e99d58da132fa7', {
+                        callback: 'JSON_CALLBACK'
+                    },
+                    {
+                        get: { method: 'JSONP' }
+                    });
+                    // Example ending: ?q=London&cnt=7&APPID=1f1752b09314e40ba1e99d58da132fa7
+                    // Takes a couple objects...
+                    // Since it's coming from an outside source it's a potential security problem so the browser will be cautios of hack attempts
+                    // We get around that by giving it a JSON Callback called JSONP
+                    // In the URL we passed 'q' for the city + state and 'cnt' for the number of days...
+                    return weatherApi.get({
+                        q: location,
+                        cnt: numDays
+                    });
+                }
+            }
+        ]);
+
+
+        //  Directives
+        myApp.directive('homeDirective', function() {
+            return {
+                templateUrl: '/Directive/HomeDirective',
+                replace: true // Makes sure the content replaces the parent div. Leave out to keep parent div.
+            }
+        });
+
         //  Controllers
+        myApp.controller('layoutCtrl', [
+            '$scope', function ($scope) {
+                $scope.layoutString = 'This is a string from layout\'s $scope';
+            }
+        ]);
+
         myApp.controller('homeCtrl', [
             '$scope', function($scope) {
                 $scope.homeString = 'This is a string from home\'s $scope';
             }
         ]);
 
-        myApp.controller('layoutCtrl', [
-            '$scope', function($scope) {
-                $scope.layoutString = 'This is a string from layout\'s $scope';
+        myApp.controller('forecastCtrl', [
+            '$scope', '$routeParams', 'placeService', 'weatherService', function($scope, $routeParams, placeService, weatherService) {
+                $scope.city = placeService.city;
+                $scope.state = placeService.state;
+                $scope.location = placeService.cityState();
+
+                $scope.numDays = $routeParams.numDays || '5'; // The default just in case of a route with no params. It's a string because (something i remember about it not working, might update this note)
+
+                $scope.weatherResult = weatherService.GetWeather($scope.location, $scope.numDays);
+
+                $scope.convertToF = function(degKelvin) {
+                    return Math.round((1.8 * (degKelvin - 273)) + 32);
+                }
+
+                $scope.convertToDate = function(dt) {
+                    // The date comes back in weird format... so we multiply times 1000
+                    return new Date(dt * 1000);
+                }
+                // angularjs.org > develop > API (leads to https://docs.angularjs.org/api)
             }
         ]);
+
+        
     </script>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
@@ -49,15 +120,14 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    <li><a href="#/Weather">Weather Forecast</a></li>
                 </ul>
             </div>
         </div>
     </div>
     <div class="container body-content" >
         <h2>{{layoutString}}</h2>
-        <div ng-view></div>
+        <p>(I should figure out how to hide it when not in the Index view using ng-hide or something)</p>
         @RenderBody()
         <hr />
         <footer>
