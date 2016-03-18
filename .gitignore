@@ -1,1 +1,16 @@
+# NuGet Packages can create problems
 packages/
+
+# Build Folders
+[Bb]in/
+[Oo]bj/
+
+# User-specific files
+*.mdf
+*.suo
+*.user
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
