@@ -1,0 +1,9 @@
+﻿
+@{
+    Layout = null;
+}
+
+<h1>This is the home page</h1>
+<h2>{{homeString}}</h2>
+<h4>The home can still access the outer $scope: {{layoutString}}</h4>
+<p>The layout controller is set up the traditional way (with an attribute) while the home controller is specified with routing parameters, which is often cleaner and more scalable than keeping all these controller labels whereever needed. I wanted to keep one scope global so I went outside the routing params. This was an experiment and might have been a bad idea. Values passed betwen controllers should generally be shared via custom services.</p>
