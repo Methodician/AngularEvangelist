@@ -23,5 +23,10 @@ namespace AngularEvangelist.Controllers
         {
             return View();
         }
+
+        public ActionResult UsersTable()
+        {
+            return View();
+        }
     }
 }

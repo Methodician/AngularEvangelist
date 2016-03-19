@@ -22,3 +22,12 @@ select,
 textarea {
     max-width: 280px;
 }
+
+table {
+    border: 1px solid brown;
+    border-spacing: 0.5rem;
+}
+
+#usersEditor {
+    list-style-type: none;
+}

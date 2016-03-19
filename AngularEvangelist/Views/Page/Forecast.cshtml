@@ -10,10 +10,21 @@ Days: <a href="#/Forecast/2" ng-class="{ 'btn-primary' : numDays === '2' }">2</a
 <a href="#/Forecast/5" ng-class="{ 'btn-primary' : numDays === '5' }">5</a> |
 <a href="#/Forecast/7" ng-class="{ 'btn-primary' : numDays === '7' }">7</a>
 
-<div ng-repeat="w in weatherResult.list">
-    <div class="row">
-        <div class="col-md-12">
-            <div forecast-panel base-date="{{w.dt}}" day-temp="{{w.temp.day}}" night-temp="{{w.temp.night}}" convert-date="convertDate(date)" convert-temp="convertToF(temp)"></div>
+<div ng-repeat="w in weatherResult.list" >
+    <div class="row" >
+        <div class="col-md-12" >
+            <div forecast-panel base-date="{{w.dt}}" day-temp="{{w.temp.day}}" night-temp="{{w.temp.night}}" convert-date="convertDate(date)" convert-temp="convertToF(temp)" ></div>
         </div>
     </div>
 </div>
+
+@*<table>
+    <tr>
+        <th>Key</th>
+        <th>Val</th>
+    </tr>
+    <tr ng-repeat="(key,val) in weatherResult" >
+        <td><strong>{{key}}: </strong></td>
+        <td>{{val}}</td>
+    </tr>
+</table>*@

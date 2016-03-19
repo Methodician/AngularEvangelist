@@ -29,6 +29,10 @@
                 .when('/Forecast/:days', {
                     templateUrl: '/Page/Forecast',
                     controller: 'forecastCtrl'
+                })
+            .when('/Users', {
+                templateUrl: '/Page/UsersTable',
+                controller: 'userController'
                 });
         });
 
@@ -41,9 +45,7 @@
             this.cityState = function() {
                 return self.city + ", " + self.state;
             }
-        });
-
-        myApp.service('weatherService', [
+        }).service('weatherService', [
             '$resource', function($resource) {
                 this.GetWeather = function(location, numDays) {
                     var weatherApi = $resource('http://api.openweathermap.org/data/2.5/forecast/daily?APPID=1f1752b09314e40ba1e99d58da132fa7', {
@@ -52,14 +54,30 @@
                     {
                         get: { method: 'JSONP' }
                     });
+                    return weatherApi.get({
+                        q: location,
+                        cnt: numDays
+                    });
                     // Example ending: ?q=London&cnt=7&APPID=1f1752b09314e40ba1e99d58da132fa7
                     // Takes a couple objects...
                     // Since it's coming from an outside source it's a potential security problem so the browser will be cautios of hack attempts
                     // We get around that by giving it a JSON Callback called JSONP
                     // In the URL we passed 'q' for the city + state and 'cnt' for the number of days...
-                    return weatherApi.get({
-                        q: location,
-                        cnt: numDays
+                }
+            }
+        ]).service('usersService', [
+            '$resource', function($resource) {
+                this.GetUsers = function() {
+                    var usersApi = $resource('https://api.github.com/users?since=135', {
+                        callback: 'JSON_CALLBACK'
+                    },
+                    {
+                        get: { method: 'JSONP' }
+                    });
+                    // Example ending: ?since=135
+                    return usersApi.get({
+                        /*since: 135*/
+                
                     });
                 }
             }
@@ -101,26 +119,26 @@
                 }
             ])
             .controller('weatherSearchCtrl', [
-                '$scope','$routeParams','$location','placeService',function($scope, $routeParams, $location, placeService) {
+                '$scope', '$routeParams', '$location', 'placeService', function($scope, $routeParams, $location, placeService) {
                     $scope.city = placeService.city;
                     $scope.state = placeService.state;
                     $scope.numDays = 5;
 
                     $scope.location = placeService.cityState();
 
-                    $scope.$watch('city', function () {
+                    $scope.$watch('city', function() {
                         placeService.city = $scope.city;
                         $scope.location = placeService.cityState();
                     });
-                    $scope.$watch('state', function () {
+                    $scope.$watch('state', function() {
                         placeService.state = $scope.state;
                         $scope.location = placeService.cityState();
                     });
-                    $scope.$watch('numDays', function () {
+                    $scope.$watch('numDays', function() {
                         $routeParams.days = $scope.numDays;
                     });
 
-                    $scope.submit = function () {
+                    $scope.submit = function() {
                         $location.path('/Forecast/' + $scope.numDays);
                     }
                 }
@@ -145,6 +163,37 @@
                     }
                     // angularjs.org > develop > API (leads to https://docs.angularjs.org/api)
                 }
+            ])
+            .controller('userController', [
+                '$scope', 'usersService', function($scope, usersService) {
+                    
+                    $scope.users = usersService.GetUsers();
+
+                    $scope.addNew = function(user) {
+                        $scope.users.data.push(user);
+                        $scope.done();
+                    };
+
+                    $scope.removeUser = function(user) {
+                        var index = $scope.users.data.indexOf(user);     // This just gets the actual index of the user in the aray rather than the ng-repeat index, in case we've implemented sorting or anything else...
+                        alert('deleting user at index ' + index);
+                        $scope.users.data.splice(index, 1);
+                    };
+
+                    $scope.edit = function(user){
+                        $scope.current = user;
+                    };
+
+                    $scope.done = function() {
+                        $scope.current = {};
+                    };
+
+                    $scope.current = {};            // This is just an ad-hock $scope variable to hold the user we're going to edit, then set in the edit function...
+
+                    $scope.submit = function(current) {    // This only exists so that pressing enter ends the interaction (along with the "<form>" wrapper around the interface <ul>
+                        $scope.addNew(current);
+                    };
+                }
             ]);
 
         
@@ -161,12 +210,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.Raw(@Html.ActionLink("[replacetext]", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" }).ToHtmlString().Replace("[replacetext]", "<img src=\"/Images/angularSm.png\"/>"))
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li><a href="/Weather#/Search">Weather Forecast</a></li>
+                    <li><a href="/Weather#/Search" >Weather Forecast</a></li>
+                    <li><a href="/UserTable#/Users">Users Table</a></li>
                 </ul>
             </div>
         </div>

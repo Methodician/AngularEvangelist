@@ -4,7 +4,12 @@
 }
 @ViewBag.message
 <h1>This is the home page view</h1>
-<h3>It's a lot like any other view. In this case, it simply replaces the ng-view div in the Index based on routing parameters (a route ending in "/#")</h3>
+<h3><strong>A note about this stuff: </strong>In the real world we would separate the script into relevant buckets as it grew.
+    We could put script that took advantage or Razor (or .aspx) in the views,
+    could isolate certain controllers to certain sections and instantiate them in near-by script tags,
+    and could create script files to organize scripts that didn't need direct access to view data or razor(aspx) stuff.
+     In this simple sample, I'm putting everything in the layout page because I'm a noob... plus it's probably easier to get to for exploration all in one place</h3>
+<h2>It's a lot like any other view. In this case, it simply replaces the ng-view div in the Index based on routing parameters (a route ending in "/#")</h2>
 <h2>{{homeString}}</h2>
 <h4>The home can still access the outer $scope: {{layoutString}}</h4>
 <p>

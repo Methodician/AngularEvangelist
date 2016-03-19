@@ -1,0 +1,40 @@
+﻿
+@{
+    Layout = null;
+}
+{{testString}}
+<table border="1" >
+    <thead>
+        <tr>
+            <th>Login</th>
+            <th>ID</th>
+            <th>URL</th>
+            <th>Admin</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="u in users.data" >
+            <td>{{u.login}}</td>
+            <td>{{u.id}}</td>
+            <td>{{u.url}}</td>
+            <td>{{u.site_admin}}</td>
+            <td><a href="#/Users" ng-click="removeUser(u)" >Delete</a></td>
+            <td><a href="#/Users" ng-click="edit(u)" >Edit</a></td>
+        </tr>
+    </tbody>
+</table>
+<h3>Add a new user:</h3>
+<p>(note... when I edit a user sometimes this breaks... Something I thin to do with repeating primary keys...)</p>
+<ul id="usersEditor">
+    <li>Login: <input type="text" id="login" ng-model="current.login" value="{{current.login}}" /></li>
+    <li>Id: <input type="text" id="id" ng-model="current.id" value="{{current.id}}" /></li>
+    <li>Url: <input type="text" id="url" ng-model="current.url" value="{{current.url}}" /></li>
+    <li>Admin?: <input type="text" id="admin" ng-model="current.site_admin" value="{{current.site_admin}}" /></li>
+    <li>
+        <button ng-click="done()">Done editing</button>
+        <button ng-click="addNew(current)">Add New User</button>
+    </li>
+</ul>
+

@@ -123,6 +123,7 @@
     <Compile Include="Controllers\DirectiveController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PageController.cs" />
+    <Compile Include="Controllers\UserTableController.cs" />
     <Compile Include="Controllers\WeatherController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -136,6 +137,8 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\angular.png" />
+    <Content Include="Images\angularSm.png" />
     <Content Include="Scripts\angular-mocks.js" />
     <Content Include="Scripts\angular-resource.js" />
     <Content Include="Scripts\angular-resource.min.js" />
@@ -177,6 +180,8 @@
     <Content Include="Views\Page\Forecast.cshtml" />
     <Content Include="Views\Directive\ForecastPanel.cshtml" />
     <Content Include="Views\Page\WeatherSearch.cshtml" />
+    <Content Include="Views\Page\UsersTable.cshtml" />
+    <None Include="Views\UserTable\Index.cshtml" />
     <None Include="Views\Weather\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
