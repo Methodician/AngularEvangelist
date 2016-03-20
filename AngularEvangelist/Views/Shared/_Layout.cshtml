@@ -37,15 +37,17 @@
         });
 
         //  Services
-        myApp.service('placeService', function() {
-            var self = this;
-            this.city = "Portland";
-            this.state = "OR";
+        myApp.service('placeService', [
+            function() {
+                var self = this;
+                this.city = "Portland";
+                this.state = "OR";
 
-            this.cityState = function() {
-                return self.city + ", " + self.state;
+                this.cityState = function() {
+                    return self.city + ", " + self.state;
+                }
             }
-        }).service('weatherService', [
+        ]).service('weatherService', [
             '$resource', function($resource) {
                 this.GetWeather = function(location, numDays) {
                     var weatherApi = $resource('http://api.openweathermap.org/data/2.5/forecast/daily?APPID=1f1752b09314e40ba1e99d58da132fa7', {
@@ -77,11 +79,22 @@
                     // Example ending: ?since=135
                     return usersApi.get({
                         /*since: 135*/
-                
+
                     });
                 }
             }
         ]);
+        /*.service('cityService', [
+            '$resource', function($resource) {
+                this.GetCities = function() {
+                    var citiesApi = $resource('http://api.sba.gov/geodata/city_data_for_state_of/:state', { state: '@@state' });
+                    citiesApi.get({ state: 'OR.json' })
+                        .$promise.then(function(cities) {
+                            return cities;
+                        });
+                }
+            }
+        ]);*/
 
 
         //  Directives
@@ -119,12 +132,13 @@
                 }
             ])
             .controller('weatherSearchCtrl', [
-                '$scope', '$routeParams', '$location', 'placeService', function($scope, $routeParams, $location, placeService) {
+                '$scope', '$routeParams', '$location', 'placeService'/*, 'cityService'*/, function ($scope, $routeParams, $location, placeService/*, cityService*/) {
                     $scope.city = placeService.city;
                     $scope.state = placeService.state;
                     $scope.numDays = 5;
-
+                    
                     $scope.location = placeService.cityState();
+                    //$scope.cities = cityService.GetCities();
 
                     $scope.$watch('city', function() {
                         placeService.city = $scope.city;
