@@ -2,7 +2,7 @@
 <html ng-app="myApp" ng-controller="layoutCtrl">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" >
     <title>@ViewBag.Title - My ASP.NET Application</title>
     <script src="~/Scripts/angular.min.js" ></script>
     <script src="~/Scripts/angular-route.min.js"></script>
@@ -12,7 +12,7 @@
         var myApp = angular.module('myApp', ['ngRoute', 'ngResource']);
 
         //  Routes
-        myApp.config(function($routeProvider) {
+        myApp.config(function($routeProvider) {     // routes are Caps sensiTive
             $routeProvider
                 .when('/', {
                     templateUrl: '/Page/Home',
@@ -132,12 +132,47 @@
                 }
             ])
             .controller('weatherSearchCtrl', [
-                '$scope', '$routeParams', '$location', 'placeService'/*, 'cityService'*/, function ($scope, $routeParams, $location, placeService/*, cityService*/) {
+                '$scope', '$http', '$routeParams', '$location', 'placeService'/*, 'cityService'*/, function ($scope, $http, $routeParams, $location, placeService/*, cityService*/) {
+                    /*$http.jsonp('http://api.sba.gov/geodata/city_data_for_state_of/OR.json')
+                        .success(function (result) {
+                            //$scope.cities = result;
+                            console.log('Result: ');
+                            console.log(result);
+                        }).error(function (error) {
+                            console.log("Error: ");
+                            console.log(error);
+                        });*/
+
+
+                    /*var url = 'http://api.sba.gov/geodata/city_data_for_state_of/OR.json';
+                    $http({
+                        method: 'JSONP',
+                        url: url
+                    }).success(function (result) {
+                        console.log('Result: ');
+                        console.log(result);
+                    }).error(function (error) {
+                        console.log('Error: ');
+                        console.log(error);
+                    });*/
+
+                    /*$http.get('http://api.sba.gov/geodata/city_data_for_state_of/OR.json', {
+                        get: { method: 'JSONP' }
+                    }).then(function(result) {
+                        //$scope.cities = result;
+                        console.log('result ');
+                        console.log(result);
+                    }, function (error) {
+                        console.log('error ');
+                        console.log(error);
+                    });*/
+
                     $scope.city = placeService.city;
                     $scope.state = placeService.state;
                     $scope.numDays = 5;
                     
                     $scope.location = placeService.cityState();
+                    
                     //$scope.cities = cityService.GetCities();
 
                     $scope.$watch('city', function() {
